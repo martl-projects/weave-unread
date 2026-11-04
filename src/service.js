@@ -1,7 +1,7 @@
 // Unread: how many notices wait in a place, until you open it on any of your devices, as a Weave hint service Weave
 // ships. It folds weave.notice (what your node works out is for you: a message to you, a new post you follow) and
 // weave.seen (what you opened, sealed to you), and its rules (its settings) say what counts: without one, messages
-// to you do.
+// to you and new things where you follow do (requests wait in the Inbox, not in a place).
 
 const MAX = 2000;
 
@@ -40,7 +40,7 @@ export function fold(domain, settings, state, items) {
     } else if (item.kind === 'weave.notice' && typeof b.space === 'string') {
       const notice = { id: item.id, time: item.time, space: b.space, category: b.category, ...(b.from ? { from: b.from } : {}), ...(b.board ? { board: b.board } : {}), ...(b.channel ? { channel: b.channel } : {}), ...(b.post ? { post: b.post } : {}) };
       const rule = ruleFor(notice, rules);
-      if (rule ? rule.count : notice.category === 'messages') s.notices.push(notice);
+      if (rule ? rule.count : notice.category !== 'requests') s.notices.push(notice);
     }
   }
   // What was opened since counts no more.
